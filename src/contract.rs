@@ -40,6 +40,7 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Increment {} => try_increment(deps),
+        ExecuteMsg::Decrement {} => try_decrement(deps),
         ExecuteMsg::Reset { count } => try_reset(deps, info, count),
     }
 }
@@ -52,6 +53,19 @@ pub fn try_increment(deps: DepsMut) -> Result<Response, ContractError> {
 
     Ok(Response::new().add_attribute("method", "try_increment"))
 }
+
+pub fn try_decrement(deps: DepsMut) -> Result<Response, ContractError> {
+    STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
+        if state.count == 0 {
+            return Err(ContractError::DecrementError {});
+        }
+        state.count -= 1;
+        Ok(state)
+    })?;
+
+    Ok(Response::new().add_attribute("method", "try_decrement"))
+}
+
 pub fn try_reset(deps: DepsMut, info: MessageInfo, count: i32) -> Result<Response, ContractError> {
     STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
         if info.sender != state.owner {

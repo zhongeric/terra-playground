@@ -17,6 +17,18 @@
     {
       "type": "object",
       "required": [
+        "decrement"
+      ],
+      "properties": {
+        "decrement": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
         "reset"
       ],
       "properties": {
